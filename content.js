@@ -1,6 +1,6 @@
 console.log("Save Img extension content.js"); 
 
-let saveExtensionOn = false;
+let saveExtensionOn = true;
 let hoveredImgSrc;
 
 const modal = document.createElement("dialog");
@@ -16,19 +16,34 @@ function createFilename(fileExtension){
     let hours = today.getHours().toString();
     let minutes = today.getMinutes().toString();
     let seconds = today.getSeconds().toString();
-    return day + hours + minutes + seconds + "." + fileExtension;
+    return day + hours + minutes + seconds + Math.floor(Math.random() * 100).toString() + "." + fileExtension;
 }
 
+function includesExtension(url, extensionsArray){
+	let returnExtension = false;
+	
+	
+	for (let extension of extensionsArray){
+		if (url.includes(extension)){
+			returnValue = true;
+			returnExtension = extension;
+			break;
+		}
+	}
+	return returnExtension;
+	
+}
 
 function download(dataurl) {
     const link = document.createElement("a");
     const allowedFormats = ['jpeg', 'jpg', 'png', 'svg'];
     let splittedUrl = dataurl.split(".");
-    let fileExtension = splittedUrl[splittedUrl.length - 1].toLowerCase();
+    let fileExtension = includesExtension(dataurl, allowedFormats);
 
+	
     //if (allowedFormats.includes(fileExtension)){
 	//if (true){
-	if (dataurl.includes(fileExtension)){
+	if (fileExtension !== false){
         let filename = createFilename(fileExtension);
         link.href = dataurl;
         document.body.appendChild(link);
